@@ -26,8 +26,15 @@ app.get('/quizzes', (req, res) => {
 			+ "with a simple accident",
 			"There is only a thin line between happiness and unhappiness"
 		],
-		minPerQuestion: 0,
+		minPerQuestion: 1,
 		maxPerQuestion: 7,
+		answerLegend:  ["Strongly disagree",
+						"Somewhat disagree",
+						"A little disagree",
+						"Neither Agree or Disagree",
+						"A little agree",
+						"Somewhat agree",
+						"Strongly agree"]
 	}
 
 	/// set array size
