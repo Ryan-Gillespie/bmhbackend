@@ -4,21 +4,14 @@ const cors = require('cors');
 const morgan = require('morgan');
 const app = express();
 const { MongoClient } = require('mongodb');
+const base64 = require('base-64');
+const data = require('./env.json');
 
 app.use(cors());
 app.use(bp.json());
 app.use(morgan('combined'));
 
-app.get('/', (req, res) => {
-	const { MongoClient } = require('mongodb');
-	const uri = "mongodb+srv://admin:badgermentalhealth@cluster0.c61q2.mongodb.net/users?retryWrites=true&w=majority";
-	const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-	client.connect(async err => {
-		const collection = client.db("users").collection("users");
-		res.send(await collection.findOne({email: req.headers.email}));
-		client.close();
-	});
-})
+const uri = "mongodb+srv://" + base64.decode(data.token) + "@cluster0.c61q2.mongodb.net/users?retryWrites=true&w=majority";
 
 app.get('/quizes', (req, res) => {
 
@@ -58,7 +51,6 @@ app.get('/quizes', (req, res) => {
 app.get('/login', (req, res) => {
 	const {email, password} = req.headers
 
-	const uri = "mongodb+srv://admin:badgermentalhealth@cluster0.c61q2.mongodb.net/users?retryWrites=true&w=majority";
 	const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 	client.connect(async err => {
 		const collection = client.db("users").collection("users");
@@ -76,7 +68,6 @@ app.get('/login', (req, res) => {
 app.post('/login', (req, res) => {
 	const {email, password} = req.headers
 
-	const uri = "mongodb+srv://admin:badgermentalhealth@cluster0.c61q2.mongodb.net/users?retryWrites=true&w=majority";
 	const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 	client.connect(async err => {
 		const collection = client.db("users").collection("users");
