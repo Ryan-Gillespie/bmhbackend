@@ -104,8 +104,8 @@ function isPasswordValid(enteredPassword) {
 	return false;
 }
 
-function userExists(email, collection) {
-	if(collection.findOne({email: email}) !== null) {
+async function userExists(email, collection) {
+	if(await collection.findOne({email: email}) !== null) {
 		return true
 	}
 	return false;
