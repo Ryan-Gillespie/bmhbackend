@@ -49,16 +49,13 @@ app.get('/quizes', (req, res) => {
 })
 
 app.get('/login', (req, res) => {
-	var token = base64.encode(req.headers.email + ":" + req.headers.password + ":" + 0626)
-	console.log(token)
 	const [email, password] = base64.decode(req.headers.token).split(":")
-	const uri = "mongodb+srv://admin:badgermentalhealth@cluster0.c61q2.mongodb.net/users?retryWrites=true&w=majority";
 	const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 	client.connect(async err => {
 		const collection = client.db("users").collection("users");
 		const doc = await collection.findOne({email: email})
 		if (doc.password === password && doc.email === email) {
-			res.send({token: token})
+			res.send({token: base64.encode(email + ":" + password + ':' + 0626)})
 		}
 		else{
 			res.send({message: 'Email or password invalid! Please enter a valid email and a password with length >= 6'})
@@ -69,7 +66,7 @@ app.get('/login', (req, res) => {
 
 app.post('/register', (req, res) => {
 	var token = base64.encode(req.headers.email + ":" + req.headers.password + ":" + 0626)
-	const [email, password] = base64.decode(token).split(":")
+	const [email, password] = base64.decode(req.headers.token).split(":")
 	const uri = "mongodb+srv://admin:badgermentalhealth@cluster0.c61q2.mongodb.net/users?retryWrites=true&w=majority";
 	const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 	client.connect(async err => {
@@ -77,11 +74,12 @@ app.post('/register', (req, res) => {
 		if(userExists(email, collection)) {
 			res.send({message: 'User email already exists! Try logging in.'})
 		} else {
-			res.send({token: token})
+			res.send({token: base64.encode(email + ":" + password + ':' + 0626)})
 		}
 		if (isEmailValid(email) && isPasswordValid(password)) {
 			const doc = await collection.insertOne({email: email, password: password});
-			res.send({token: token})
+			
+			res.send({token: base64.encode(email + ":" + password + ':' + 0626)})
 		} else {
 			res.send({message: 'Email or password invalid! Please enter a valid email and a password with length >= 6'})
 		}
@@ -117,4 +115,5 @@ function userExists(email, collection) {
 	}
 	return false;
 }
+
 app.listen(3001, () => {console.log("listening on port 3001")});
