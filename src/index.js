@@ -9,16 +9,6 @@ app.use(cors());
 app.use(bp.json());
 app.use(morgan('combined'));
 
-app.get('/', (req, res) => {
-	const { MongoClient } = require('mongodb');
-	const uri = "mongodb+srv://admin:badgermentalhealth@cluster0.c61q2.mongodb.net/users?retryWrites=true&w=majority";
-	const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-	client.connect(async err => {
-		const collection = client.db("users").collection("users");
-		res.send(await collection.findOne({email: req.headers.email}));
-		client.close();
-	});
-})
 
 app.get('/quizes', (req, res) => {
 
@@ -55,35 +45,64 @@ app.get('/quizes', (req, res) => {
 	res.send(quizObjects);
 })
 
+var base64 = require('base-64');
 app.get('/login', (req, res) => {
-	const {email, password} = req.headers
-
+	var token = base64.encode(req.headers.email + ":" + req.headers.password + ":" + 0626)
+	console.log(token)
+	const [email, password] = base64.decode(req.headers.token).split(":")
 	const uri = "mongodb+srv://admin:badgermentalhealth@cluster0.c61q2.mongodb.net/users?retryWrites=true&w=majority";
 	const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 	client.connect(async err => {
 		const collection = client.db("users").collection("users");
 		const doc = await collection.findOne({email: email})
 		if (doc.password === password) {
-			res.send({token: doc._id})
+			res.send({token: token})
 		}
 		else{
-			res.send({message: 'Wrong Password'})
+			res.send({message: 'Email or password invalid! Please enter a valid email and a password with length >= 6'})
 		}
 		client.close();
 	});
 });
 
-app.post('/login', (req, res) => {
-	const {email, password} = req.headers
-
+app.post('/register', (req, res) => {
+	var token = base64.encode(req.headers.email + ":" + req.headers.password + ":" + 0626)
+	const [email, password] = base64.decode(req.headers.token).split(":")
 	const uri = "mongodb+srv://admin:badgermentalhealth@cluster0.c61q2.mongodb.net/users?retryWrites=true&w=majority";
 	const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 	client.connect(async err => {
 		const collection = client.db("users").collection("users");
-		const doc = await collection.insertOne({email: email, password: password});
-		res.send(doc);
+		console.log(isEmailValid(email) , isPasswordValid(password))
+		if (isEmailValid(email) && isPasswordValid(password)) {
+			const doc = await collection.insertOne({email: email, password: password});
+			
+			res.send({token: token})
+		} else {
+			res.send({message: 'Email or password invalid! Please enter a valid email and a password with length >= 6'})
+		}
+		
 		client.close();
 	});
 });
+
+function isEmailValid(enteredEmail) {
+
+    if(enteredEmail[0] === '.' && enteredEmail[0] === '_' && enteredEmail[0] === '-') {
+		return false;
+	}
+	if(enteredEmail.split("@").length === 2) {
+		if(enteredEmail.split("@")[1].split(".").length === 2) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+}
+
+function isPasswordValid(enteredPassword) {
+	if(enteredPassword.length >= 6) return true;
+	return false;
+}
 
 app.listen(3001, () => {console.log("listening on port 3001")});
