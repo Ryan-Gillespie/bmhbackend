@@ -54,10 +54,10 @@ app.get('/login', (req, res) => {
 	client.connect(async err => {
 		const collection = client.db("users").collection("users");
 		const doc = await collection.findOne({email: email})
-		if (doc.password === password && doc.email === email) {
+		if (doc != null) {
 			res.send({token: base64.encode(email + ":" + password + ':' + 0626)})
 		}
-		else{
+		else {
 			res.send({message: 'Email or password invalid! Please enter a valid email and a password with length >= 6'})
 		}
 		client.close();
@@ -73,12 +73,8 @@ app.post('/register', (req, res) => {
 		const collection = client.db("users").collection("users");
 		if(userExists(email, collection)) {
 			res.send({message: 'User email already exists! Try logging in.'})
-		} else {
-			res.send({token: base64.encode(email + ":" + password + ':' + 0626)})
-		}
-		if (isEmailValid(email) && isPasswordValid(password)) {
+		} else if (!isEmailValid(email) && isPasswordValid(password)) {
 			const doc = await collection.insertOne({email: email, password: password});
-			
 			res.send({token: base64.encode(email + ":" + password + ':' + 0626)})
 		} else {
 			res.send({message: 'Email or password invalid! Please enter a valid email and a password with length >= 6'})
