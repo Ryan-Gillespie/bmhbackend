@@ -2,15 +2,12 @@
 
 # To run the project:
 
-1. Clone this repository and the backend repository
-2. Open a terminal in the frontend repository
-3. run the command `npm install`
-4. run the command `expo start`
-5. Open another terminal in the backend repository
-6. run the command `npm install`
-7. run the command `npm run start`
-8. wait for expo to spin up
-9. open the app on a web branch or on your native device through the expo interface.
+1. Clone this repository
+6. cd into directory for cloned project
+7. run the command `npm install`in the terminal
+8. run the command `npm run start`
+9. wait for expo to spin up
+10. To see GUI, clone frontend branch (https://github.com/alexgoldsmith/badgermentalhealth) and open the app on a web branch or on your native device through the expo interface. Follow instructions for frontend on the readme.md in that repo
 
 # To run the tests:
 
