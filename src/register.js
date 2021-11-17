@@ -9,6 +9,30 @@ const data = require('./env.json');
 const uri = "mongodb+srv://" + base64.decode(data.token) + "@cluster0.c61q2.mongodb.net/users?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
+function isEmailValid(enteredEmail) {
+    if(enteredEmail[0] === '.' && enteredEmail[0] === '_' && enteredEmail[0] === '-') {
+		return false;
+	}
+	if(enteredEmail.split("@").length === 2) {
+		if(enteredEmail.split("@")[1].split(".").length === 2) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+}
+
+function isPasswordValid(enteredPassword) {
+	if(enteredPassword.length >= 6) return true;
+	return false;
+}
+
+function userExists(email, collection) {
+	if(collection.findOne({email: email}) !== null) {
+		return true
+	}
+	return false;
+}
 
 module.exports = function register(req, res) {
 	//var token = base64.encode(req.headers.email + ":" + req.headers.password + ":" + 0626)
@@ -28,30 +52,5 @@ module.exports = function register(req, res) {
 	});
 }
 
-function isEmailValid(enteredEmail) {
 
-    if(enteredEmail[0] === '.' && enteredEmail[0] === '_' && enteredEmail[0] === '-') {
-		return false;
-	}
-	if(enteredEmail.split("@").length === 2) {
-		if(enteredEmail.split("@")[1].split(".").length === 2) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-}
-
-function isPasswordValid(enteredPassword) {
-	if(enteredPassword.length >= 6) return true;
-	return false;
-}
-
-function userExists(email, collection) {
-	if(collection.findOne({email: email}) !== null) {
-		return true
-	}
-	return false;
-}
 

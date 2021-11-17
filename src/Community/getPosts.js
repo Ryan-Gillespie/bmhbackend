@@ -1,6 +1,4 @@
-const index = require('../index.js')
-const app = index.app
-//const client = index.client
+
 const base64 = require('base-64');
 const data = require('../env.json');
 const { MongoClient } = require('mongodb');
@@ -10,15 +8,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 module.exports = (req, res) => {
     client.connect(async err => {
 		const collection = client.db("users").collection("posts");
-		collection.find({}).limit(50)
-        .toArray(function (err, result) {
-          if (err) {
-            res.status(400).send("Error fetching posts!");
-         } else {
-            console.log(res.json)
-            res.json(result);
-          }
-        });
+		res.send(collection.find({}).toArray());
 		client.close();
 	});
 };

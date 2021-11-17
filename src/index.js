@@ -17,13 +17,17 @@ app.use(morgan('combined'));
 // const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 //Quizzes endpoint
-app.get('/quizzes', require('./getQuizzes'))
+app.get('/quizzes', require('./getQuizzes.js'))
 
 //Login Endpoint
-app.get('./login', require('./login'))
+app.get('/login', require('./login.js'))
 
 //Register user endpoint
-app.post('/register', require('./register'));
+app.post('/register', require('./register.js'));
 
-app.get('./posts', require('./Community/getPosts'))
+//get posts endpoint
+app.get('/posts', require('./Community/getPosts.js'))
+
+app.get('/replies', require('./Community/getReplies.js'))
+
 app.listen(3001, () => {console.log("listening on port 3001")});
