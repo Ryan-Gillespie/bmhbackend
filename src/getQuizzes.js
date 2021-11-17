@@ -1,7 +1,6 @@
-const index = require('./index.js')
-const app = index.app
 
-app.get('/quizzes', module.exports = (req, res) => {
+
+module.exports = (req, res) => {
 	// mock quiz object
 	const quiz =  {
 		title: "Fragility of Happiness Scale",
@@ -32,5 +31,5 @@ app.get('/quizzes', module.exports = (req, res) => {
 
 	// send array of quiz objects
 	res.send(quizObjects);
-})
+};
 

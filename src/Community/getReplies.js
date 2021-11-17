@@ -1,6 +1,9 @@
-const index = require('./index.js')
+const index = require('../index.js')
 const app = index.app
-const client = index.client
+//const client = index.client
+
+const { MongoClient } = require('mongodb');
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 app.get('./replies', (req, res) => {
     //const postId = req.headers.postId;
