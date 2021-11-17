@@ -2,7 +2,9 @@ const express = require('express');
 const bp = require('body-parser');
 const cors = require('cors');
 const morgan = require('morgan');
-const app = express();
+
+exports.app = app = express();
+
 const { MongoClient } = require('mongodb');
 const base64 = require('base-64');
 const data = require('./env.json');
@@ -12,45 +14,14 @@ app.use(bp.json());
 app.use(morgan('combined'));
 
 const uri = "mongodb+srv://" + base64.decode(data.token) + "@cluster0.c61q2.mongodb.net/users?retryWrites=true&w=majority";
+exports.client = client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
-app.get('/quizes', (req, res) => {
+//Quizzes endpoint
+app.get('/quizzes', require('./getQuizzes'))
 
-	// mock quiz object
-	const quiz =  {
-		title: "Fragility of Happiness Scale",
-		description: "How happy are you... really?",
-		questions: [
-			"Something might happen at any time and we could"
-			+ "easily lose our happiness",
-			"Happiness is fragile",
-			"it is likely that our happiness could be reduced to unhappiness"
-			+ "with a simple accident",
-			"There is only a thin line between happiness and unhappiness"
-		],
-		minPerQuestion: 1,
-		maxPerQuestion: 7,
-		answerLegend:  ["Strongly disagree",
-						"Somewhat disagree",
-						"A little disagree",
-						"Neither Agree or Disagree",
-						"A little agree",
-						"Somewhat agree",
-						"Strongly agree"]
-	}
-
-	/// set array size
-	const arraysize = 0;
-	
-	// create array to contain quiz objects
-	const quizObjects = [quiz];
-
-	// send array of quiz objects
-	res.send(quizObjects);
-})
-
+//Login Endpoint
 app.get('/login', (req, res) => {
 	const [email, password] = base64.decode(req.headers.token).split(":")
-	const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 	console.log({token: base64.encode(email + ":" + password)})
 	client.connect(async err => {
 		const collection = client.db("users").collection("users");
@@ -65,10 +36,10 @@ app.get('/login', (req, res) => {
 	});
 });
 
+//Register user endpoint
 app.post('/register', (req, res) => {
 	//var token = base64.encode(req.headers.email + ":" + req.headers.password + ":" + 0626)
 	const [email, password] = base64.decode(req.headers.token).split(":")
-	const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 	client.connect(async err => {
 		const collection = client.db("users").collection("users");
 		if(await userExists(email, collection)) {
