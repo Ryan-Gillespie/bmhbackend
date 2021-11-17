@@ -20,10 +20,13 @@ app.use(morgan('combined'));
 app.get('/quizzes', require('./getQuizzes'))
 
 //Login Endpoint
-app.get('./login', require('./login'))
+app.get('/login', require('./login'));
 
 //Register user endpoint
 app.post('/register', require('./register'));
 
-app.get('./posts', require('./Community/getPosts'))
+app.get('/posts', require('./community/getPosts'));
+
+app.get('/replies', require('./community/getReplies'));
+
 app.listen(3001, () => {console.log("listening on port 3001")});

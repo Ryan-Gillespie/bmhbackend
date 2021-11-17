@@ -10,15 +10,8 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 module.exports = (req, res) => {
     client.connect(async err => {
 		const collection = client.db("users").collection("posts");
-		collection.find({}).limit(50)
-        .toArray(function (err, result) {
-          if (err) {
-            res.status(400).send("Error fetching posts!");
-         } else {
-            console.log(res.json)
-            res.json(result);
-          }
-        });
+    const posts = await collection.find({}).limit(50).toArray();
+    res.send(posts);
 		client.close();
 	});
 };
