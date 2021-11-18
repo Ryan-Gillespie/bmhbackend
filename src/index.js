@@ -16,10 +16,10 @@ app.use(morgan('combined'));
 // const uri = "mongodb+srv://" + base64.decode(data.token) + "@cluster0.c61q2.mongodb.net/users?retryWrites=true&w=majority";
 // const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
-//Quizzes endpoint
+// Quizzes endpoint
 app.get('/quizzes', require('./getQuizzes'))
 
-//Login Endpoint
+// Login Endpoint
 app.get('./login', require('./login'))
 
 async function userExists(email, collection) {
@@ -29,5 +29,8 @@ async function userExists(email, collection) {
 	return false;
 }
 
+// Posts endpoint
 app.get('./posts', require('./Community/getPosts'))
+
+// Choose port
 app.listen(3001, () => {console.log("listening on port 3001")});
