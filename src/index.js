@@ -22,8 +22,12 @@ app.get('/quizzes', require('./getQuizzes'))
 //Login Endpoint
 app.get('./login', require('./login'))
 
-//Register user endpoint
-app.post('/register', require('./register'));
+async function userExists(email, collection) {
+	if(await collection.findOne({email: email}) !== null) {
+		return true
+	}
+	return false;
+}
 
 app.get('./posts', require('./Community/getPosts'))
 app.listen(3001, () => {console.log("listening on port 3001")});
