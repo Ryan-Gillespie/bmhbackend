@@ -17,7 +17,7 @@ module.exports = (req, res) => {
 		const collection = client.db("users").collection("users");
 		const doc = await collection.findOne({email: email})
 		if (doc != null) {
-			res.send({token: base64.encode(email + ":" + password + ':' + 0626)})
+			res.send({token: base64.encode(email + ":" + password + ':' + '0626')})
 		}
 		else {
 			res.send({message: 'Email or password invalid! Please enter a valid email and a password with length >= 6'})
