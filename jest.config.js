@@ -3,7 +3,7 @@
  * https://jestjs.io/docs/configuration
  */
 
-export default {
+const config = {
   // All imported modules in your tests should be mocked automatically
   // automock: false,
 
@@ -93,7 +93,7 @@ export default {
   // notifyMode: "failure-change",
 
   // A preset that is used as a base for Jest's configuration
-  // preset: undefined,
+  preset: "@shelf/jest-mongodb"
 
   // Run tests from one or more projects
   // projects: undefined,
@@ -192,3 +192,5 @@ export default {
   // Whether to use watchman for file crawling
   // watchman: true,
 };
+
+module.exports = config;
