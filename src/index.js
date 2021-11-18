@@ -20,11 +20,7 @@ app.use(morgan('combined'));
 app.get('/quizzes', require('./getQuizzes.js'))
 
 //Login Endpoint
-<<<<<<< HEAD
 app.get('/login', require('./login.js'))
-=======
-app.get('/login', require('./login'));
->>>>>>> 7ac1c228f1fad742a071eb6fabddfcfe8cdabc84
 
 //Register user endpoint
 app.post('/register', require('./register.js'));
@@ -34,11 +30,6 @@ app.get('/posts', require('./Community/getPosts.js'))
 
 app.get('/replies', require('./Community/getReplies.js'))
 
-<<<<<<< HEAD
-=======
-app.get('/posts', require('./community/getPosts'));
 
-app.get('/replies', require('./community/getReplies'));
 
->>>>>>> 7ac1c228f1fad742a071eb6fabddfcfe8cdabc84
 app.listen(3001, () => {console.log("listening on port 3001")});

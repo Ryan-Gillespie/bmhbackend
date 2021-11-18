@@ -9,7 +9,7 @@ const data = require('./env.json');
 const uri = "mongodb+srv://" + base64.decode(data.token) + "@cluster0.c61q2.mongodb.net/users?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
-function isEmailValid(enteredEmail) {
+async function isEmailValid(enteredEmail) {
     if(enteredEmail[0] === '.' && enteredEmail[0] === '_' && enteredEmail[0] === '-') {
 		return false;
 	}
@@ -22,21 +22,23 @@ function isEmailValid(enteredEmail) {
 	}
 }
 
-function isPasswordValid(enteredPassword) {
+async function isPasswordValid(enteredPassword) {
 	if(enteredPassword.length >= 6) return true;
 	return false;
 }
 
-function userExists(email, collection) {
-	if(collection.findOne({email: email}) !== null) {
-		return true
+async function userExists(email, collection) {
+	const doc = await collection.findOne({email: email})
+	if(doc === null) {
+		return false
 	}
-	return false;
+	return true;
 }
 
 module.exports = function register(req, res) {
 	//var token = base64.encode(req.headers.email + ":" + req.headers.password + ":" + 0626)
 	const [email, password] = base64.decode(req.headers.token).split(":")
+	//const [email, password] = [req.headers.email, req.headers.password]
 	client.connect(async err => {
 		const collection = client.db("users").collection("users");
 		if(await userExists(email, collection)) {

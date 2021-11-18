@@ -6,10 +6,10 @@ const data = require('./env.json');
 const uri = "mongodb+srv://" + base64.decode(data.token) + "@cluster0.c61q2.mongodb.net/users?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
-
 module.exports = (req, res) => {
-	const [email, password] = base64.decode(req.headers.token).split(":")
-	console.log({token: base64.encode(email + ":" + password)})
+	// const [email, password] = base64.decode(req.headers.token).split(":")
+	//console.log({token: base64.encode(email + ":" + password)})
+    const [email, password] = [req.headers.email, req.headers.password]
 	client.connect(async err => {
 		const collection = client.db("users").collection("users");
 		const doc = await collection.findOne({email: email})

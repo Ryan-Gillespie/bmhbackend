@@ -8,12 +8,8 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 module.exports = (req, res) => {
     client.connect(async err => {
 		const collection = client.db("users").collection("posts");
-<<<<<<< HEAD
-		res.send(collection.find({}).toArray());
-=======
     const posts = await collection.find({}).limit(50).toArray();
     res.send(posts);
->>>>>>> 7ac1c228f1fad742a071eb6fabddfcfe8cdabc84
 		client.close();
 	});
 };
