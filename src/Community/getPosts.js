@@ -5,7 +5,7 @@ const { MongoClient } = require('mongodb');
 const uri = "mongodb+srv://" + base64.decode(data.token) + "@cluster0.c61q2.mongodb.net/users?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
-module.exports = (req, res) => {
+module.exports = (req, res, client) => {
     client.connect(async err => {
 		const collection = client.db("users").collection("posts");
     const posts = await collection.find({}).limit(50).toArray();
@@ -13,3 +13,4 @@ module.exports = (req, res) => {
 		client.close();
 	});
 };
+
