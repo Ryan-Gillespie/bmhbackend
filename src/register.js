@@ -1,6 +1,4 @@
-const index = require('./index.js')
-const app = index.app
-
+const app = require('../src/app');
 const { MongoClient } = require('mongodb');
 const base64 = require('base-64');
 const data = require('./env.json');
