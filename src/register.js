@@ -31,13 +31,12 @@ async function userExists(email, collection) {
 
 module.exports = async function register(req, res, client) {
 
-
 	try {
 		await client.connect();
 
 		const [email, password] = base64.decode(req.headers.token).split(":")
-		// program quits on await userExists for some reason?
-		const userExists = userExists(email, collection);
+
+		const userExists = await userExists(email, collection);
 
 		if (userExists) {
 			console.log("test");
@@ -52,6 +51,9 @@ module.exports = async function register(req, res, client) {
 		} else {
 			res.send({message: 'Email or password invalid! Please enter a valid email and a password with length >= 6'})
 		}
+	} catch(err) {
+		console.log(err);
+
 	} finally {
 		// Ensures that the client will close on function return / error
 		await client.close();

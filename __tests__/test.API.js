@@ -77,13 +77,21 @@ describe('Test API endpoints', () => {
     const mockResponse = {
       json: jest.fn(),
       status: jest.fn(),
-      token: "",
-      send: function (token) {
-       this.token = token; 
-      }
+      send: jest.fn()
     }
 
-  const output = register(mockRequest, mockResponse, client);
+    const expectedToken = {
+      token: base64.encode(email + ":" + password + ":" + "0626")
+    }
+
+  register(mockRequest, mockResponse, client);
+
+  // https://jestjs.io/docs/mock-functions#mock-property 
+  // https://jestjs.io/docs/expect#toequalvalue
+  console.log(mockResponse.send.mock.instances);
+  
+  expect(mockResponse.send.mock.calls.length).toBe(1);
+  // expect(mockResponse.send.mock.results[0].value).toEqual(expectedToken);
   })
 
 
