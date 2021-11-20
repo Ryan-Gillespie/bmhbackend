@@ -42,7 +42,6 @@ module.exports = async function register(req, res, client) {
 		const userExists = await doesUserExist(email, collection);
 
 		if (userExists) {
-			console.log("test");
 			res.send({message: 'User email already exists! Try logging in.'})
 
 		} else if (await isEmailValid(email) && await isPasswordValid(password)) {

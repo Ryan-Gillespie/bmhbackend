@@ -1,3 +1,6 @@
+// https://www.javascriptjanuary.com/blog/mocking-functionality-in-jest-at-different-scopes
+
+
 // Test package uses MonboDB In-Momory Server under the hood
 // https://github.com/shelfio/jest-mongodb#2-create-jest-mongodb-configjs
 const {MongoClient} = require('mongodb');
@@ -74,10 +77,13 @@ describe('Test API endpoints', () => {
       }
     }
 
+    const mockCallback = jest
+      .fn()
+      .mockImplementation(token => token)
+      .mockName('mockRegister');
+
     const mockResponse = {
-      json: jest.fn(),
-      status: jest.fn(),
-      send: jest.fn()
+      send: mockCallback 
     }
 
     const expectedToken = {
@@ -88,8 +94,8 @@ describe('Test API endpoints', () => {
 
   // https://jestjs.io/docs/mock-functions#mock-property 
   // https://jestjs.io/docs/expect#toequalvalue
-  console.log(mockResponse.send.mock) 
-  // expect(mockResponse.send.mock.calls.length).toBe(1);
+  console.log(mockCallback.mock);
+  expect(mockCallback.mock.calls.length).toBe(1);
   // expect(mockResponse.send.mock.results[0].value).toEqual(expectedToken);
   })
 
