@@ -21,7 +21,7 @@ async function isPasswordValid(enteredPassword) {
 	return false;
 }
 
-async function userExists(email, collection) {
+async function doesUserExist(email, collection) {
 	const doc = await collection.findOne({email: email})
 	if(doc === null) {
 		return false
@@ -32,11 +32,14 @@ async function userExists(email, collection) {
 module.exports = async function register(req, res, client) {
 
 	try {
+
 		await client.connect();
 
 		const [email, password] = base64.decode(req.headers.token).split(":")
 
-		const userExists = await userExists(email, collection);
+		const collection = client.db("users").collection("users");
+
+		const userExists = await doesUserExist(email, collection);
 
 		if (userExists) {
 			console.log("test");
@@ -44,7 +47,7 @@ module.exports = async function register(req, res, client) {
 
 		} else if (await isEmailValid(email) && await isPasswordValid(password)) {
 			// add user to the collection
-			const collection = client.db("users").collection("users");
+			const doc = await collection.insertOne({email: email, password: password});
 			// send success token
 			res.send({token: base64.encode(email + ":" + password + ':' + '0626')})
 
