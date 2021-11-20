@@ -77,10 +77,13 @@ describe('Test API endpoints', () => {
     const mockResponse = {
       json: jest.fn(),
       status: jest.fn(),
-      send: jest.fn() 
+      token: "",
+      send: function (token) {
+       this.token = token; 
+      }
     }
 
-    register(mockRequest, mockResponse, client)
+  const output = register(mockRequest, mockResponse, client);
   })
 
 

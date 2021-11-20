@@ -29,23 +29,33 @@ async function userExists(email, collection) {
 	return true;
 }
 
-module.exports = function register(req, res, client) {
-	//var token = base64.encode(req.headers.email + ":" + req.headers.password + ":" + 0626)
-	const [email, password] = base64.decode(req.headers.token).split(":")
-	//const [email, password] = [req.headers.email, req.headers.password]
-	client.connect(async err => {
-		const collection = client.db("users").collection("users");
-		if(await userExists(email, collection)) {
+module.exports = async function register(req, res, client) {
+
+
+	try {
+		await client.connect();
+
+		const [email, password] = base64.decode(req.headers.token).split(":")
+		// program quits on await userExists for some reason?
+		const userExists = userExists(email, collection);
+
+		if (userExists) {
+			console.log("test");
 			res.send({message: 'User email already exists! Try logging in.'})
+
 		} else if (await isEmailValid(email) && await isPasswordValid(password)) {
-			const doc = await collection.insertOne({email: email, password: password});
+			// add user to the collection
+			const collection = client.db("users").collection("users");
+			// send success token
 			res.send({token: base64.encode(email + ":" + password + ':' + '0626')})
+
 		} else {
 			res.send({message: 'Email or password invalid! Please enter a valid email and a password with length >= 6'})
 		}
-		
-		client.close();
-	});
+	} finally {
+		// Ensures that the client will close on function return / error
+		await client.close();
+	}
 }
 
 
