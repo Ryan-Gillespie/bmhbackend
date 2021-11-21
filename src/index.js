@@ -10,6 +10,7 @@ const base64 = require('base-64');
 const data = require('./env.json');
 
 const register = require('./register.js')
+const login = require('./login.js')
 
 app.use(cors());
 app.use(bp.json());
@@ -22,7 +23,9 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 app.get('/quizzes', require('./getQuizzes.js'))
 
 //Login Endpoint
-app.get('/login', require('./login.js'))
+app.get('/login', function(req, res) {
+    login(req, res, client);
+})
 
 //Register user endpoint
 app.post('/register', function(req, res) {

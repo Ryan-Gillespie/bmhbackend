@@ -1,4 +1,3 @@
-const app = require('../src/app');
 const { MongoClient } = require('mongodb');
 const base64 = require('base-64');
 const data = require('./env.json');
@@ -53,6 +52,7 @@ module.exports = async function register(req, res, client) {
 		} else {
 			res.send({message: 'Email or password invalid! Please enter a valid email and a password with length >= 6'})
 		}
+
 	} catch(err) {
 		console.log(err);
 
