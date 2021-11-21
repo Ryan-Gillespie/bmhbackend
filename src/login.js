@@ -1,25 +1,31 @@
-
 const { MongoClient } = require('mongodb');
 const base64 = require('base-64');
 const data = require('./env.json');
 
-const uri = "mongodb+srv://" + base64.decode(data.token) + "@cluster0.c61q2.mongodb.net/users?retryWrites=true&w=majority";
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+module.exports = async function login(req, res, client) {
 
-module.exports = (req, res) => {
-	// const [email, password] = base64.decode(req.headers.token).split(":")
-	//console.log({token: base64.encode(email + ":" + password)})
-    const [email, password] = [req.headers.email, req.headers.password]
-	client.connect(async err => {
+	try {
+
+		await client.connect();
+
+		const [email, password] = base64.decode(req.headers.token).split(":")
+
 		const collection = client.db("users").collection("users");
+
 		const doc = await collection.findOne({email: email})
+
 		if (doc != null) {
 			res.send({token: base64.encode(email + ":" + password + ':' + '0626')})
-		}
-		else {
+
+		} else {
 			res.send({message: 'Email or password invalid! Please enter a valid email and a password with length >= 6'})
 		}
-		client.close();
-	});
+
+	} catch(err) {
+		console.log(err);
+	} finally {
+
+		await client.close();
+	}
 };
 

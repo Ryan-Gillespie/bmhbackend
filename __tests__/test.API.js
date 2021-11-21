@@ -7,6 +7,7 @@ const {MongoClient} = require('mongodb');
 const base64 = require('base-64');
 const data = require('../src/env.json');
 const register = require('../src/register');
+const login = require('../src/login');
 
 describe('Test API endpoints', () => {
 
@@ -31,28 +32,44 @@ describe('Test API endpoints', () => {
     
 
     // create mock posts
-    const docs = [
+    const testPosts = [
       {
-      "_id": 1,
-      "Title": "Test Post 01",
-      "Author": "Test Author 01",
-      "Text": "Test Text 01",
-      "Likes": 1,
-      "NumReplies": 0
+      _id: 1,
+      Title: "Test Post 01",
+      Author: "Test Author 01",
+      Text: "Test Text 01",
+      Likes: 1,
+      NumReplies: 0
       },
 
       {
-      "_id": 2,
-      "Title": "Test Post 02",
-      "Author": "Test Author 02",
-      "Text": "Test Text 02",
-      "Likes": 2,
-      "NumReplies": 0
+      _id: 2,
+      Title: "Test Post 02",
+      Author: "Test Author 02",
+      Text: "Test Text 02",
+      Likes: 2,
+      NumReplies: 0
       }
     ];
 
+    // create mock users
+    const testUsers = [
+      {
+        _id: 101,
+        email: "testuser101@test.com",
+        password: "password"
+      },
 
-    await db.collection("posts").insertMany(docs);
+      {
+        _id: 102,
+        email: "testuser102@test.com",
+        password: "password"
+      }
+  ];
+
+
+    await db.collection("posts").insertMany(testPosts);
+    await db.collection("users").insertMany(testUsers);
   });
 
   // close connection after tests are run
@@ -61,7 +78,6 @@ describe('Test API endpoints', () => {
   // });
 
 
-  // test
   test('test register functionality', async() => {
 
 
@@ -97,6 +113,40 @@ describe('Test API endpoints', () => {
   expect(mockResponse.send.mock.results[0].value).toEqual(expectedToken);
   })
 
+  test('request with valid login credentials', async() => {
+
+    // mock user
+    const email = "testuser101@test.com";
+    const password = "password";
+
+    const encoded = base64.encode(email + ":" + password)
+
+    const mockRequest = {
+      headers: {
+        token: encoded
+      }
+    }
+
+    const mockCallback = jest
+      .fn()
+      .mockImplementation(token => token)
+      .mockName('mockLogin');
+
+    const mockResponse = {
+      send: mockCallback 
+    }
+
+    const expectedToken = {
+      token: base64.encode(email + ":" + password + ":" + "0626")
+    }
+
+  await login(mockRequest, mockResponse, client);
+
+  // https://jestjs.io/docs/mock-functions#mock-property 
+  // https://jestjs.io/docs/expect#toequalvalue
+  expect(mockResponse.send.mock.results[0].value).toEqual(expectedToken);
+  })
+  
 
   // test
   // test('test post retrieval', async () => {
