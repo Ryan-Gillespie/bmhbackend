@@ -61,6 +61,3 @@ module.exports = async function register(req, res, client) {
 		await client.close();
 	}
 }
-
-
-
