@@ -90,13 +90,12 @@ describe('Test API endpoints', () => {
       token: base64.encode(email + ":" + password + ":" + "0626")
     }
 
-  register(mockRequest, mockResponse, client);
+  await register(mockRequest, mockResponse, client);
 
   // https://jestjs.io/docs/mock-functions#mock-property 
   // https://jestjs.io/docs/expect#toequalvalue
-  console.log(mockCallback.mock);
-  expect(mockCallback.mock.calls.length).toBe(1);
-  // expect(mockResponse.send.mock.results[0].value).toEqual(expectedToken);
+
+  expect(mockResponse.send.mock.results[0].value).toEqual(expectedToken);
   })
 
 
