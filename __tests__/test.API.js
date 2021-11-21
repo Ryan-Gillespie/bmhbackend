@@ -94,7 +94,6 @@ describe('Test API endpoints', () => {
 
   // https://jestjs.io/docs/mock-functions#mock-property 
   // https://jestjs.io/docs/expect#toequalvalue
-
   expect(mockResponse.send.mock.results[0].value).toEqual(expectedToken);
   })
 
