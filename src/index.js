@@ -9,8 +9,10 @@ const { MongoClient } = require('mongodb');
 const base64 = require('base-64');
 const data = require('./env.json');
 
-const register = require('./register.js')
-const login = require('./login.js')
+const register = require('./register.js');
+const login = require('./login.js');
+const getReplies = require('../src/Community/getReplies');
+const getPosts = require('../src/Community/getPosts');
 
 app.use(cors());
 app.use(bp.json());
@@ -33,10 +35,12 @@ app.post('/register', function(req, res) {
 });
 
 //get posts endpoint
-app.get('/posts', require('./Community/getPosts.js'))
+app.get('/posts', function(req, res) {
+    getPosts(req, res, client);
+})
 
-app.get('/replies', require('./Community/getReplies.js'))
-
-
+app.get('/replies', function(req, res) {
+    getReplies(req, res, client);
+})
 
 app.listen(3001, () => {console.log("listening on port 3001")});

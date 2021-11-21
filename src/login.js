@@ -5,7 +5,6 @@ const data = require('./env.json');
 module.exports = async function login(req, res, client) {
 
 	try {
-
 		await client.connect();
 
 		const [email, password] = base64.decode(req.headers.token).split(":")
@@ -23,9 +22,10 @@ module.exports = async function login(req, res, client) {
 
 	} catch(err) {
 		console.log(err);
-	} finally {
 
+	} finally {
 		await client.close();
+
 	}
 };
 
