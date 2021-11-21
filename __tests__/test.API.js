@@ -79,8 +79,6 @@ describe('Test API endpoints', () => {
 
 
   test('test register functionality', async() => {
-
-
     // mock user
     const email = "test001@test.com";
     const password = "password";
@@ -147,22 +145,55 @@ describe('Test API endpoints', () => {
   expect(mockResponse.send.mock.results[0].value).toEqual(expectedToken);
   })
   
+  test('request with invalid login credentials', async() => {
 
-  // test
-  // test('test post retrieval', async () => {
-  //   const posts = db.collection("posts");
-  //   const expectedPost = {
-  //     "_id": 2,
-  //     "Title": "Test Post 02",
-  //     "Author": "Test Author 02",
-  //     "Text": "Test Text 02",
-  //     "Likes": 2,
-  //     "NumReplies": 0
-  //    }
+    // mock user
+    const email = "invalidUser@test.com";
+    const password = "password";
 
-  //   const retrievedPost = await posts.findOne({_id: 2});
-  //   expect(retrievedPost).toEqual(expectedPost);
-  // });
+    const encoded = base64.encode(email + ":" + password)
+
+    const mockRequest = {
+      headers: {
+        token: encoded
+      }
+    }
+
+    const mockCallback = jest
+      .fn()
+      .mockImplementation(token => token)
+      .mockName('mockInvalidLogin');
+
+    const mockResponse = {
+      send: mockCallback 
+    }
+
+    const expectedMessage = {
+      message: "Email or password invalid! " +
+      "Please enter a valid email and a password with length >= 6"
+    }
+
+  await login(mockRequest, mockResponse, client);
+
+  // https://jestjs.io/docs/mock-functions#mock-property 
+  // https://jestjs.io/docs/expect#toequalvalue
+  expect(mockResponse.send.mock.results[0].value).toEqual(expectedMessage);
+  })
+
+  test('test post retrieval', async () => {
+    const posts = db.collection("posts");
+    const expectedPost = {
+      "_id": 2,
+      "Title": "Test Post 02",
+      "Author": "Test Author 02",
+      "Text": "Test Text 02",
+      "Likes": 2,
+      "NumReplies": 0
+     }
+
+    const retrievedPost = getReplies(mockRequest, mockResponse, client);
+    expect(retrievedPost).toEqual(expectedPost);
+  });
 
   // test
   // test('test retrieval of non-existant post', async () => {
