@@ -2,16 +2,16 @@ const base64 = require('base-64');
 const data = require('../env.json');
 const { MongoClient } = require('mongodb');
 
-module.exports = async function createPost(req, res, client)  {
+module.exports = async function createReplies(req, res, client) {
 
     try {
         await client.connect();
         
-        const post = req.headers.post;
+        const post = req.headers.reply;
 
-        const collection = client.db("users").collection("posts");
+        const collection = client.db("users").collection("replies");
 
-        const result = await collection.insertOne(post);
+        const result = await collection.insertOne(reply);
 
         res.send(result.insertedId);
         

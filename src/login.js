@@ -28,4 +28,3 @@ module.exports = async function login(req, res, client) {
 
 	}
 };
-

@@ -8,6 +8,8 @@ const base64 = require('base-64');
 const data = require('../src/env.json');
 const register = require('../src/register');
 const login = require('../src/login');
+const getPosts = require('../src/Community/getPosts');
+const createPost = require('../src/Community/createPost');
 
 describe('Test API endpoints', () => {
 
@@ -104,11 +106,11 @@ describe('Test API endpoints', () => {
       token: base64.encode(email + ":" + password + ":" + "0626")
     }
 
-  await register(mockRequest, mockResponse, client);
+    await register(mockRequest, mockResponse, client);
 
-  // https://jestjs.io/docs/mock-functions#mock-property 
-  // https://jestjs.io/docs/expect#toequalvalue
-  expect(mockResponse.send.mock.results[0].value).toEqual(expectedToken);
+    // https://jestjs.io/docs/mock-functions#mock-property 
+    // https://jestjs.io/docs/expect#toequalvalue
+    expect(mockResponse.send.mock.results[0].value).toEqual(expectedToken);
   })
 
   test('request with valid login credentials', async() => {
@@ -128,7 +130,7 @@ describe('Test API endpoints', () => {
     const mockCallback = jest
       .fn()
       .mockImplementation(token => token)
-      .mockName('mockLogin');
+      .mockName('mockSendLoginRecieptToken');
 
     const mockResponse = {
       send: mockCallback 
@@ -138,11 +140,11 @@ describe('Test API endpoints', () => {
       token: base64.encode(email + ":" + password + ":" + "0626")
     }
 
-  await login(mockRequest, mockResponse, client);
+    await login(mockRequest, mockResponse, client);
 
-  // https://jestjs.io/docs/mock-functions#mock-property 
-  // https://jestjs.io/docs/expect#toequalvalue
-  expect(mockResponse.send.mock.results[0].value).toEqual(expectedToken);
+    // https://jestjs.io/docs/mock-functions#mock-property 
+    // https://jestjs.io/docs/expect#toequalvalue
+    expect(mockResponse.send.mock.results[0].value).toEqual(expectedToken);
   })
   
   test('request with invalid login credentials', async() => {
@@ -173,15 +175,57 @@ describe('Test API endpoints', () => {
       "Please enter a valid email and a password with length >= 6"
     }
 
-  await login(mockRequest, mockResponse, client);
+    await login(mockRequest, mockResponse, client);
 
-  // https://jestjs.io/docs/mock-functions#mock-property 
-  // https://jestjs.io/docs/expect#toequalvalue
-  expect(mockResponse.send.mock.results[0].value).toEqual(expectedMessage);
+    // https://jestjs.io/docs/mock-functions#mock-property 
+    // https://jestjs.io/docs/expect#toequalvalue
+    expect(mockResponse.send.mock.results[0].value).toEqual(expectedMessage);
+  })
+
+  test('test post creation', async () => {
+    const mockRequest = {
+      headers: {
+        Title: "Test Post 03",
+        Author: "Test Author 03",
+        Text: "Test Text 03",
+        Likes: 3,
+        NumReplies: 0
+      }
+    }
+
+    const mockCallback = jest
+      .fn()
+      .mockImplementation(id => id)
+      .mockName('mockSendPosts');
+
+    const mockResponse = {
+      send: mockCallback 
+    }
+
+    const expectedResponse= {
+      id: "recieved id"
+    }
+
+    await createPost(mockRequest, mockResponse, client);
+
+    // test response value deep equals expected value
+    expect(mockResponse.send.mock.value).toBeInstanceOf(String);
+
   })
 
   test('test post retrieval', async () => {
-    const posts = db.collection("posts");
+    
+    const mockRequest = {}
+
+    const mockCallback = jest
+      .fn()
+      .mockImplementation(token => token)
+      .mockName('mockSendPosts');
+
+    const mockResponse = {
+      send: mockCallback 
+    }
+
     const expectedPost = {
       "_id": 2,
       "Title": "Test Post 02",
@@ -191,8 +235,12 @@ describe('Test API endpoints', () => {
       "NumReplies": 0
      }
 
-    const retrievedPost = getReplies(mockRequest, mockResponse, client);
-    expect(retrievedPost).toEqual(expectedPost);
+    await getPosts(mockRequest, mockResponse, client);
+
+    // recieved posts from the return value of the first call to MockCallBack
+    const recievedPosts = mockResponse.send.mock.results[0].value;
+
+    expect(recievedPosts[0]).toEqual(expectedPost);
   });
 
   // test
