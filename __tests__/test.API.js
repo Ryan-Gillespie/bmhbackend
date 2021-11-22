@@ -183,18 +183,13 @@ describe('Test API endpoints', () => {
   })
 
   test('test post creation', async () => {
-    const mockPost = {
-      _id: 3,
-      Title: "Test Post 03",
-      Author: "Test Author 03",
-      Text: "Test Text 03",
-      Likes: 3,
-      NumReplies: 0
-    }
-
     const mockRequest = {
-      main: {
-        postObject: mockPost
+      headers: {
+        Title: "Test Post 03",
+        Author: "Test Author 03",
+        Text: "Test Text 03",
+        Likes: 3,
+        NumReplies: 0
       }
     }
 
@@ -207,14 +202,14 @@ describe('Test API endpoints', () => {
       send: mockCallback 
     }
 
-    const respectedAck = {
-      value: "to be replaced"
+    const expectedResponse= {
+      id: "recieved id"
     }
 
     await createPost(mockRequest, mockResponse, client);
 
     // test response value deep equals expected value
-    expect(mockResponse.send.mock.value).toEqual(expectedAck);
+    expect(mockResponse.send.mock.value).
 
   })
 

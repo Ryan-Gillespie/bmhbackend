@@ -7,13 +7,13 @@ module.exports = (req, res, client) => {
     try {
         await client.connect();
         
-        const post = req.main.postObject;
+        const post = req.headers.post;
 
         const collection = client.db("users").collection("posts");
 
-        await collection.insertOne(post);
+        const result = await collection.insertOne(post);
 
-        res.send({value: "to be replaced"});
+        res.send(result.insertedId);
         
     } catch(err) {
         console.log(err);
