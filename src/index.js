@@ -11,7 +11,9 @@ const data = require('./env.json');
 
 const register = require('./register.js');
 const login = require('./login.js');
+const createReplies = require('..src/Community/createReplies');
 const getReplies = require('../src/Community/getReplies');
+const createPost = require('../src/Community/createPost');
 const getPosts = require('../src/Community/getPosts');
 
 app.use(cors());
@@ -34,11 +36,22 @@ app.post('/register', function(req, res) {
     register(req, res, client);
 });
 
-//get posts endpoint
-app.get('/posts', function(req, res) {
-    getPosts(req, res, client);
+// create posts endpoint
+app.post('/posts', function(req, res) {
+    createPost(req, res, client)
 })
 
+//get posts endpoint
+app.get('/posts', function(req, res) {
+    getPost(req, res, client);
+})
+
+// create replies endpoint
+app.post('/replies', function(req, res) {
+    createReplies(req, res, client);
+})
+
+// get replies endpoint
 app.get('/replies', function(req, res) {
     getReplies(req, res, client);
 })

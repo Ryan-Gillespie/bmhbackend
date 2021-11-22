@@ -195,7 +195,7 @@ describe('Test API endpoints', () => {
 
     const mockCallback = jest
       .fn()
-      .mockImplementation(token => token)
+      .mockImplementation(id => id)
       .mockName('mockSendPosts');
 
     const mockResponse = {
@@ -209,7 +209,7 @@ describe('Test API endpoints', () => {
     await createPost(mockRequest, mockResponse, client);
 
     // test response value deep equals expected value
-    expect(mockResponse.send.mock.value).
+    expect(mockResponse.send.mock.value).toBeInstanceOf(String);
 
   })
 
