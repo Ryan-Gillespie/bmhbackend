@@ -11,8 +11,7 @@
 
 # To run the tests:
 
-1. Clone the frontend repository
-2. cd into the directory in a terminal
-3. run the command `npm install`
-4. run the command `npm install jest --global`
-5. to run the tests run `jest`
+1. cd into the directory in a terminal
+2. run the command `npm install`
+3. run the command `npm install jest --global`
+4. to run the tests run `jest`
