@@ -1,16 +1,22 @@
-
 const base64 = require('base-64');
 const data = require('../env.json');
 const { MongoClient } = require('mongodb');
-const uri = "mongodb+srv://" + base64.decode(data.token) + "@cluster0.c61q2.mongodb.net/users?retryWrites=true&w=majority";
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
-module.exports = (req, res, client) => {
-    client.connect(async err => {
+module.exports = async function getPosts(req, res, client) {
+ 
+ 	try {
+		await client.connect();
+
 		const collection = client.db("users").collection("posts");
+    // return first 50 posts
     const posts = await collection.find({}).limit(50).toArray();
     res.send(posts);
-		client.close();
-	});
-};
 
+	} catch(err) {
+		console.log(err);
+
+	} finally {
+		await client.close();
+
+	}
+};
