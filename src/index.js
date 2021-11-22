@@ -11,7 +11,7 @@ const data = require('./env.json');
 
 const register = require('./register.js');
 const login = require('./login.js');
-const createReplies = require('..src/Community/createReplies');
+const createReplies = require('../src/Community/createReplies');
 const getReplies = require('../src/Community/getReplies');
 const createPost = require('../src/Community/createPost');
 const getPosts = require('../src/Community/getPosts');
@@ -43,7 +43,7 @@ app.post('/posts', function(req, res) {
 
 //get posts endpoint
 app.get('/posts', function(req, res) {
-    getPost(req, res, client);
+    getPosts(req, res, client);
 })
 
 // create replies endpoint

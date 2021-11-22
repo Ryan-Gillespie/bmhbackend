@@ -6,8 +6,9 @@ module.exports = async function createReplies(req, res, client) {
 
     try {
         await client.connect();
-        
-        const post = req.headers.reply;
+
+        const reply = JSON.parse(req.headers.reply);
+        console.log(reply);
 
         const collection = client.db("users").collection("replies");
 
