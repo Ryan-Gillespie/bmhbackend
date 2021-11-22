@@ -8,8 +8,8 @@ module.exports = (req, res) => {
     const doc = req.headers.post
     client.connect(async err => {
 		const collection = client.db("users").collection("posts");
-		const result = await collection.insertOne(doc)
-		res.send(result.insertedId)
+		const deleteResult = await collection.deleteOne(doc);
+        console.dir(deleteResult.deletedCount);
 		client.close();
 	});
 }

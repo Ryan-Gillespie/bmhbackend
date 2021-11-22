@@ -13,9 +13,6 @@ app.use(cors());
 app.use(bp.json());
 app.use(morgan('combined'));
 
-// const uri = "mongodb+srv://" + base64.decode(data.token) + "@cluster0.c61q2.mongodb.net/users?retryWrites=true&w=majority";
-// const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-
 //Quizzes endpoint
 app.get('/quizzes', require('./getQuizzes.js'))
 
@@ -28,6 +25,7 @@ app.post('/register', require('./register.js'));
 //get posts endpoint
 app.get('/posts', require('./Community/getPosts.js'))
 
+//get replies endpoint
 app.get('/replies', require('./Community/getReplies.js'))
 
 
