@@ -19,20 +19,26 @@ describe('Test API endpoints', () => {
 
   // establish connection to in-memory server before running tests
   beforeAll(async () => {
+    console.log("1 - beforeAll")
     client = new MongoClient(global.__MONGO_URI__, {
       useNewURLParser: true,
     });
 
     try {
       await client.connect();
+      db = client.db(global.__MONGO_DB_NAME__);
 
     } catch (e) {
       console.error(e);
+    } finally {
     }
 
-    db = client.db(global.__MONGO_DB_NAME__);
-    
 
+  })  
+
+  // setup mock data
+  beforeEach(async () => {
+    console.log("beforeEach")
     // create mock posts
     const testPosts = [
       {
@@ -67,20 +73,24 @@ describe('Test API endpoints', () => {
         email: "testuser102@test.com",
         password: "password"
       }
-  ];
+    ];
 
-
+    await client.connect();
     await db.collection("posts").insertMany(testPosts);
     await db.collection("users").insertMany(testUsers);
+    await client.close();
   });
 
-  // close connection after tests are run
-  // afterAll(async () => {
-  //   await client.close();
-  // });
-
+  afterEach(async () => {
+    console.log("afterEach")
+    await client.connect();
+    await db.collection("posts").deleteMany({});
+    await db.collection("users").deleteMany({});
+    await client.close();
+  });
 
   test('test register functionality', async() => {
+    console.log("test 1")
     // mock user
     const email = "test001@test.com";
     const password = "password";
@@ -114,7 +124,7 @@ describe('Test API endpoints', () => {
   })
 
   test('request with valid login credentials', async() => {
-
+    console.log("test 2")
     // mock user
     const email = "testuser101@test.com";
     const password = "password";
@@ -129,7 +139,6 @@ describe('Test API endpoints', () => {
 
     const mockCallback = jest
       .fn()
-      .mockImplementation(token => token)
       .mockName('mockSendLoginRecieptToken');
 
     const mockResponse = {
@@ -140,15 +149,16 @@ describe('Test API endpoints', () => {
       token: base64.encode(email + ":" + password + ":" + "0626")
     }
 
+    // for some reason this does not find the document
     await login(mockRequest, mockResponse, client);
 
     // https://jestjs.io/docs/mock-functions#mock-property 
     // https://jestjs.io/docs/expect#toequalvalue
-    expect(mockResponse.send.mock.results[0].value).toEqual(expectedToken);
+    expect(mockResponse.send.mock.calls[0][0]).toEqual(expectedToken);
   })
   
   test('request with invalid login credentials', async() => {
-
+    console.log("test 3")
     // mock user
     const email = "invalidUser@test.com";
     const password = "password";
@@ -183,6 +193,7 @@ describe('Test API endpoints', () => {
   })
 
   test('test post creation', async () => {
+    console.log("test 4")
     const mockRequest = {
       headers: {
         Title: "Test Post 03",
@@ -208,13 +219,13 @@ describe('Test API endpoints', () => {
 
     await createPost(mockRequest, mockResponse, client);
 
-    // test response value deep equals expected value
-    expect(mockResponse.send.mock.value).toBeInstanceOf(String);
+    // expect to recieve id of inserted document in the form of ObjectId 
+    expect(24).toEqual(mockCallback.mock.calls[0][0].toHexString().length);
 
   })
 
   test('test post retrieval', async () => {
-    
+    console.log("test 5")
     const mockRequest = {}
 
     const mockCallback = jest
@@ -238,7 +249,8 @@ describe('Test API endpoints', () => {
     await getPosts(mockRequest, mockResponse, client);
 
     // recieved posts from the return value of the first call to MockCallBack
-    const recievedPosts = mockResponse.send.mock.results[0].value;
+    // the below line is only retrieving Test Post 3 for some reason??
+    const recievedPosts = mockCallback.mock.calls[0][0];
 
     expect(recievedPosts[0]).toEqual(expectedPost);
   });
