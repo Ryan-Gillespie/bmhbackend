@@ -8,6 +8,7 @@
 8. run the command `npm run start`
 9. wait for expo to spin up
 10. To see GUI, clone frontend branch (https://github.com/alexgoldsmith/badgermentalhealth) and open the app on a web branch or on your native device through the expo interface. Follow instructions for frontend on the readme.md in that repo
+11. If you are a tester: checkout the test branch with `git checkout origin/test`
 
 # To run the tests:
 
