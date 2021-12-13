@@ -39,10 +39,44 @@ module.exports = (req, res) => {
 				"very true"
 		   ],
 		   scoreKey: [
-			   "40:few imposter characterisics", "60:moderate IP experiences", "80: frequently has imposter feelings",
-			   "100: intense IP experiences"
+			   "40:Few Imposter characterisics", "60:Moderate IP experiences", "80: Frequently has Imposter feelings",
+			   "100: Intense IP experiences"
 		   ]
-	   }
+	   },
+	   {
+	    title: "Abandonment Core Belief",
+		description: "Abandonment core belief is a perceived instability or unreliability of those on whom you relied for support and connection." + 
+		"It involves the belief that the significant person or people in your life will not be able to provide emotional support, connection, or" + 
+		"because they are emotionally unstable and unpredictable, unreliable, or erratically present, and/or will die or abandon you for someone else.",
+		questions: [
+			"I worry a lot that the people I love will die or leave me.",
+			"I cling to people because I am afraid they will leave me.",
+			"I do not have a stable base of support.",
+			"I keep falling in love with people who cannot be there for me in a committed way.",
+			"Poople have always come and gone in my life.",
+			"I get desperate when someone I love pulls away.",
+			"I get so obsessed with the idea that my lovers will leave me that I drive them away.",
+			"The people closest to me are unpredictable. One minute they are there for me and the next minute they are gone.",
+			"I need other people too much.",
+			"In the end I will be alone."
+		],
+		minPerQuestion: 1,
+		maxPerQuestion: 6,
+		answerLegend: [
+			"Completely untrue of me", 
+			"mostly untrue of me",
+			"slightly more true that untrue of me",
+			"moderately true of me",
+			"mostly true of me",
+			"describes me perfectly"
+		],
+		scoreKey: [
+			"19: You probably don't have this core belief", "29: This core belief may apply to you only occassionally",
+			"39: This core belief is an issue in your life.", "49: This is definitely an important core belief for you.",
+			"60: This is a pwrful core belief for you."
+		]
+    }
+	   
 	]
     /// set array size
 	const arraysize = 0;
