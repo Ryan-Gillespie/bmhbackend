@@ -5,7 +5,7 @@ module.exports = (req, res) => {
 	const quiz =  [
 	   {
 		   title: "Imposter Syndrome",
-		   description: "Do you have Imposter characteristics?",
+		   description: "Do you have Imposter characteristics? Take this assessment and let find out.",
 		   questions: [
 			   "I have often succeeded on a test or task even though I was afraid that I would not do well before i undertook the task",
 			   "I can give the impression that I'm more competent than I really am.",
@@ -39,7 +39,7 @@ module.exports = (req, res) => {
 				"very true"
 		   ],
 		   scoreKey: [
-			   "40:Few Imposter characterisics", "60:Moderate IP experiences", "80: Frequently has Imposter feelings",
+			   "40: Few Imposter characterisics", "60: Moderate IP experiences", "80: Frequently has Imposter feelings",
 			   "100: Intense IP experiences"
 		   ]
 	   },
@@ -75,7 +75,32 @@ module.exports = (req, res) => {
 			"39: This core belief is an issue in your life.", "49: This is definitely an important core belief for you.",
 			"60: This is a pwrful core belief for you."
 		]
-    }
+    },
+	{
+		title: "Test Anxiety",
+		description: "Is test taking painful? Use this assessment to figure out if you experiencem mild or severe case of test anxiety.",
+		questions: [
+			"I have visible signs of nervousness such as sweaty palms, shaky hands, and so on right before a test.",
+			"I have 'butterflies' in my stomach before a test.",
+			"I feel nauseated before a test.",
+			"I read through the test and feel that I do no know any of the answers.",
+			"I panic before and during a test.",
+			"My mind goes blank during a test.",
+			"I remember th information that I blanked once I get out of the testing situtation.",
+			"I have trouble sleeping the night before a test.",
+			"I make mistakes on easy questions or put answers int he wrong places.",
+			"I have trouble choosing answers."
+		],
+		minPerQuestion: 1,
+		maxPerQuestion: 5,
+		scoreKey: [
+			"19: You suffer from test anxiety. In fact if your score was close to 10, a little more anxiety may be healthy to" + 
+			"keep you focused and to get your blood flowing during exams.",
+			"35: Although you exhibit some of the characteristics of test anxiety, the level of stress and tension is probably healthy.",
+			"50: You are experiencing an unhealthy level of anxiety. You should evaluate the reasons for the stress and identify strategies" + 
+			"for compensating."
+		]
+	}
 	   
 	]
     /// set array size
