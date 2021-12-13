@@ -46,11 +46,8 @@ module.exports = (req, res) => {
 	]
     /// set array size
 	const arraysize = 0;
-	
-	// create array to contain quiz objects
-	const quizObjects = [quiz];
 
 	// send array of quiz objects
-	res.send(quizObjects);
+	res.send(quiz);
 };
 
