@@ -93,6 +93,13 @@ module.exports = (req, res) => {
 		],
 		minPerQuestion: 1,
 		maxPerQuestion: 5,
+		answerLegend: [
+			"Never",
+			"Rarely",
+			"Sometimes",
+			"Often",
+			"Always"
+		],
 		scoreKey: [
 			"19: You suffer from test anxiety. In fact if your score was close to 10, a little more anxiety may be healthy to" + 
 			"keep you focused and to get your blood flowing during exams.",
