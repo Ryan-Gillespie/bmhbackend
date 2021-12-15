@@ -3,7 +3,7 @@ const data = require('../env.json');
 const { MongoClient, ObjectID } = require('mongodb');
 
 
-module.exports = async function updateLikes(req, res, client) {
+module.exports = async function updatePostLikes(req, res, client) {
  
  	try {
 		await client.connect();

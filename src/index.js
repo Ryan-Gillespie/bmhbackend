@@ -15,7 +15,8 @@ const createReplies = require('../src/Community/createReplies');
 const getReplies = require('../src/Community/getReplies');
 const createPost = require('../src/Community/createPost');
 const getPosts = require('../src/Community/getPosts');
-const updateLikes = require('./Community/updateLikes');
+const updatePostLikes = require('./Community/updatePostLikes');
+const updateReplyLikes = require('./Community/updateReplyLikes');
 
 app.use(cors());
 app.use(bp.json());
@@ -57,8 +58,12 @@ app.get('/replies', function(req, res) {
     getReplies(req, res, client);
 })
 
-app.post('/updateLikes', function(req, res){
-    updateLikes(req, res, client);
+app.post('/updatePostLikes', function(req, res){
+    updatePostLikes(req, res, client);
+})
+
+app.post('/updateReplyLikes', function(req, res){
+    updateReplyLikes(req, res, client);
 })
 
 app.listen(3001, () => {console.log("listening on port 3001")});
