@@ -6,20 +6,22 @@
 const {MongoClient} = require('mongodb');
 const base64 = require('base-64');
 const data = require('../src/env.json');
+const setupMethod = require('../setupMethod');
+const teardownMethod = require('../teardownMethod');
 const register = require('../src/register');
 const login = require('../src/login');
 const getPosts = require('../src/Community/getPosts');
 const createPost = require('../src/Community/createPost');
+const createReplies = require('../src/Community/createReplies');
 
 describe('Test API endpoints', () => {
 
   // variables in scope for all tests
-  let client;
+  var client;
   let db;
 
   // establish connection to in-memory server before running tests
   beforeAll(async () => {
-    console.log("1 - beforeAll")
     client = new MongoClient(global.__MONGO_URI__, {
       useNewURLParser: true,
     });
@@ -30,67 +32,21 @@ describe('Test API endpoints', () => {
 
     } catch (e) {
       console.error(e);
+
     } finally {
     }
-
-
-  })  
+  }); 
 
   // setup mock data
-  beforeEach(async () => {
-    console.log("beforeEach")
-    // create mock posts
-    const testPosts = [
-      {
-      _id: 1,
-      Title: "Test Post 01",
-      Author: "Test Author 01",
-      Text: "Test Text 01",
-      Likes: 1,
-      NumReplies: 0
-      },
+  beforeEach(() => {
+    return setupMethod(client);
+  });   
 
-      {
-      _id: 2,
-      Title: "Test Post 02",
-      Author: "Test Author 02",
-      Text: "Test Text 02",
-      Likes: 2,
-      NumReplies: 0
-      }
-    ];
-
-    // create mock users
-    const testUsers = [
-      {
-        _id: 101,
-        email: "testuser101@test.com",
-        password: "password"
-      },
-
-      {
-        _id: 102,
-        email: "testuser102@test.com",
-        password: "password"
-      }
-    ];
-
-    await client.connect();
-    await db.collection("posts").insertMany(testPosts);
-    await db.collection("users").insertMany(testUsers);
-    await client.close();
-  });
-
-  afterEach(async () => {
-    console.log("afterEach")
-    await client.connect();
-    await db.collection("posts").deleteMany({});
-    await db.collection("users").deleteMany({});
-    await client.close();
+  afterEach(() => {
+    return teardownMethod(client);
   });
 
   test('test register functionality', async() => {
-    console.log("test 1")
     // mock user
     const email = "test001@test.com";
     const password = "password";
@@ -118,17 +74,12 @@ describe('Test API endpoints', () => {
 
     await register(mockRequest, mockResponse, client);
 
-    // https://jestjs.io/docs/mock-functions#mock-property 
-    // https://jestjs.io/docs/expect#toequalvalue
     expect(mockResponse.send.mock.results[0].value).toEqual(expectedToken);
   })
 
   test('request with valid login credentials', async() => {
-    console.log("test 2")
-    // mock user
     const email = "testuser101@test.com";
     const password = "password";
-
     const encoded = base64.encode(email + ":" + password)
 
     const mockRequest = {
@@ -152,17 +103,14 @@ describe('Test API endpoints', () => {
     // for some reason this does not find the document
     await login(mockRequest, mockResponse, client);
 
-    // https://jestjs.io/docs/mock-functions#mock-property 
-    // https://jestjs.io/docs/expect#toequalvalue
-    expect(mockResponse.send.mock.calls[0][0]).toEqual(expectedToken);
+    expect(mockCallback.mock.calls[0][0]).toEqual(expectedToken);
   })
   
   test('request with invalid login credentials', async() => {
-    console.log("test 3")
     // mock user
     const email = "invalidUser@test.com";
     const password = "password";
-
+    
     const encoded = base64.encode(email + ":" + password)
 
     const mockRequest = {
@@ -193,14 +141,17 @@ describe('Test API endpoints', () => {
   })
 
   test('test post creation', async () => {
-    console.log("test 4")
+    const mockPost = {
+      Title: "Test Post 03",
+      Author: "Test Author 03",
+      Text: "Test Text 03",
+      Likes: 3,
+      NumReplies: 0,
+    }
+
     const mockRequest = {
-      headers: {
-        Title: "Test Post 03",
-        Author: "Test Author 03",
-        Text: "Test Text 03",
-        Likes: 3,
-        NumReplies: 0
+      headers: { 
+        post: JSON.stringify(mockPost)
       }
     }
 
@@ -225,9 +176,7 @@ describe('Test API endpoints', () => {
   })
 
   test('test post retrieval', async () => {
-    console.log("test 5")
-    const mockRequest = {}
-
+    const mockRequest = {};
     const mockCallback = jest
       .fn()
       .mockImplementation(token => token)
@@ -248,14 +197,48 @@ describe('Test API endpoints', () => {
 
     await getPosts(mockRequest, mockResponse, client);
 
-    // recieved posts from the return value of the first call to MockCallBack
-    // the below line is only retrieving Test Post 3 for some reason??
+    // recieved posts from the first arg of the first call to MockCallBack
     const recievedPosts = mockCallback.mock.calls[0][0];
 
-    expect(recievedPosts[0]).toEqual(expectedPost);
+    console.log(recievedPosts);
+
+    expect(recievedPosts[1]).toEqual(expectedPost);
   });
 
-  // test
+  test('test reply creation', async () => {
+    const mockReply= {
+      Title: "Test Reply 01",
+      Author: "Test Reply Author",
+      Text: "Test Reply Text 01",
+      Likes: 0,
+    }
+
+    const mockRequest = {
+      headers: { 
+        reply: JSON.stringify(mockReply)
+      }
+    }
+
+    const mockCallback = jest
+      .fn()
+      .mockImplementation(id => id)
+      .mockName('mockSendReply');
+
+    const mockResponse = {
+      send: mockCallback 
+    }
+
+    const expectedResponse= {
+      id: "recieved id"
+    }
+
+    await createReplies(mockRequest, mockResponse, client);
+
+    // expect to recieve id of inserted document in the form of ObjectId 
+    expect(24).toEqual(mockCallback.mock.calls[0][0].toHexString().length);
+
+  });
+
   // test('test retrieval of non-existant post', async () => {
   //   const posts = db.collection("posts");
   //   const expectedPost = {

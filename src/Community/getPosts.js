@@ -1,6 +1,5 @@
-const base64 = require('base-64');
+// what is this used for?
 const data = require('../env.json');
-const { MongoClient } = require('mongodb');
 
 module.exports = async function getPosts(req, res, client) {
  
