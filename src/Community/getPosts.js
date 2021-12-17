@@ -9,8 +9,9 @@ module.exports = async function getPosts(req, res, client) {
 
 		const collection = client.db("users").collection("posts");
     // return first 50 posts
-    const posts = await collection.find({}).limit(50).toArray();
-    res.send(posts);
+    	const posts = await collection.find({}).limit(50).toArray();
+   		
+		res.send(posts);
 
 	} catch(err) {
 		console.log(err);

@@ -17,6 +17,8 @@ const createPost = require('../src/Community/createPost');
 const getPosts = require('../src/Community/getPosts');
 const updatePostLikes = require('./Community/updatePostLikes');
 const updateReplyLikes = require('./Community/updateReplyLikes');
+const deletePost = require('./Community/deletePost');
+const deleteReply = require('./Community/deleteReply')
 
 app.use(cors());
 app.use(bp.json());
@@ -58,12 +60,20 @@ app.get('/replies', function(req, res) {
     getReplies(req, res, client);
 })
 
-app.post('/updatePostLikes', function(req, res){
+app.put('/updatePostLikes', function(req, res){
     updatePostLikes(req, res, client);
 })
 
-app.post('/updateReplyLikes', function(req, res){
+app.put('/updateReplyLikes', function(req, res){
     updateReplyLikes(req, res, client);
+})
+
+app.delete('/deletePost', function(req, res){
+    deletePost(req, res, client);
+})
+
+app.delete('/deleteReply', function(req, res){
+    deleteReply(req, res, client);
 })
 
 app.listen(3001, () => {console.log("listening on port 3001")});
