@@ -11,10 +11,12 @@ const data = require('./env.json');
 
 const register = require('./register.js');
 const login = require('./login.js');
-const createReplies = require('..src/Community/createReplies');
+const createReplies = require('../src/Community/createReplies');
 const getReplies = require('../src/Community/getReplies');
 const createPost = require('../src/Community/createPost');
 const getPosts = require('../src/Community/getPosts');
+const updatePostLikes = require('./Community/updatePostLikes');
+const updateReplyLikes = require('./Community/updateReplyLikes');
 
 app.use(cors());
 app.use(bp.json());
@@ -43,7 +45,7 @@ app.post('/posts', function(req, res) {
 
 //get posts endpoint
 app.get('/posts', function(req, res) {
-    getPost(req, res, client);
+    getPosts(req, res, client);
 })
 
 // create replies endpoint
@@ -54,6 +56,14 @@ app.post('/replies', function(req, res) {
 // get replies endpoint
 app.get('/replies', function(req, res) {
     getReplies(req, res, client);
+})
+
+app.post('/updatePostLikes', function(req, res){
+    updatePostLikes(req, res, client);
+})
+
+app.post('/updateReplyLikes', function(req, res){
+    updateReplyLikes(req, res, client);
 })
 
 app.listen(3001, () => {console.log("listening on port 3001")});

@@ -9,9 +9,11 @@ module.exports = async function getReplies(req, res, client) {
 
 		const collection = client.db("users").collection("replies");
 
-		const postId = req.headers.postId;
+		const postId = req.headers.postid;
 
-		res.send(await collection.find({postId: postId}).limit(50).toArray());
+		const allReplies = await collection.find({PostId: postId}).limit(50).toArray()
+
+		res.send(allReplies);
 
 	} catch(err) {
 		console.log(err);

@@ -7,13 +7,13 @@ module.exports = async function createPost(req, res, client)  {
     try {
         await client.connect();
         
-        const post = req.headers.post;
+        const post = JSON.parse(req.headers.post);
 
         const collection = client.db("users").collection("posts");
 
         const result = await collection.insertOne(post);
 
-        res.send(result.insertedId);
+        //res.send(result.insertedId);
         
     } catch(err) {
         console.log(err);
