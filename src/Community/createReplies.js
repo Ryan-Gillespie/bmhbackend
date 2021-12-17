@@ -8,7 +8,6 @@ module.exports = async function createReplies(req, res, client) {
         await client.connect();
 
         const reply = JSON.parse(req.headers.reply);
-        console.log(reply);
 
         const collection = client.db("users").collection("replies");
 
@@ -21,6 +20,5 @@ module.exports = async function createReplies(req, res, client) {
 
     } finally {
         await client.close()
-
     }
 };
